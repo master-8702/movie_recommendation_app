@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movie_recommendation_app/features/movie_flow/genre/genre_screen.dart';
 import 'package:movie_recommendation_app/features/movie_flow/landing/landing_screen.dart';
+import 'package:movie_recommendation_app/features/movie_flow/rating/rating_screen.dart';
+import 'package:movie_recommendation_app/features/movie_flow/years_back/years_back_screen.dart';
 
 class MovieFlow extends StatefulWidget {
   const MovieFlow({Key? key}) : super(key: key);
@@ -40,10 +42,8 @@ class _MovieFlowState extends State<MovieFlow> {
       physics: const NeverScrollableScrollPhysics(),
       children: [
         LandingScreen(nextPage: nextPage, previousPage: previousPage),
-        GenreScreen(
-          nextPage: nextPage,
-          previousPage: previousPage,
-        )
+        GenreScreen(nextPage: nextPage, previousPage: previousPage),
+        RatingScreen(nextPage: nextPage, previousPage: previousPage),
       ],
     );
   }
