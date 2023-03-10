@@ -44,6 +44,7 @@ class _MovieFlowState extends State<MovieFlow> {
         LandingScreen(nextPage: nextPage, previousPage: previousPage),
         GenreScreen(nextPage: nextPage, previousPage: previousPage),
         RatingScreen(nextPage: nextPage, previousPage: previousPage),
+        YearsBackScreen(nextPage: nextPage, previousPage: previousPage)
       ],
     );
   }
