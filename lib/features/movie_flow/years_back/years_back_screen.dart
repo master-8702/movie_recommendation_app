@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_recommendation_app/features/movie_flow/result/result_screen.dart';
 
 import '../../../core/constants.dart';
 import '../../../core/widgets/primary_button.dart';
@@ -61,7 +62,10 @@ class _YearsBackScreenState extends State<YearsBackScreen> {
                   });
                 }),
             const Spacer(),
-            PrimaryButton(onPressed: widget.nextPage, text: 'Amazing'),
+            PrimaryButton(
+                onPressed: () =>
+                    Navigator.of(context).push(ResultScreen.route()),
+                text: 'Amazing'),
             const SizedBox(
               height: kMediumSpacing,
             )
