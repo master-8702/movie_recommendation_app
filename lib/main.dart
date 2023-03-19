@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/features/movie_flow/movie_flow.dart';
 import 'package:movie_recommendation_app/theme/custom_theme.dart';
 
 void main() {
-  runApp(const MyApp());
+  // here we are setting our provider scope , which is our main app
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
