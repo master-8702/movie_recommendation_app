@@ -16,75 +16,96 @@ class ResultScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(
-              children: [
-                Stack(
-                  clipBehavior: Clip.none,
-                  children: [
-                    const CoverImage(),
-                    Positioned(
-                      width: MediaQuery.of(context).size.width,
-                      bottom: -(movieHeight / 2),
-                      child: MovieImageDetails(
-                          movie: ref.watch(movieFlowControllerProvider).movie,
-                          movieHeight: movieHeight),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: movieHeight / 2,
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Text(
-                    ref.watch(movieFlowControllerProvider).movie.overview,
-                    style: Theme.of(context).textTheme.bodyMedium,
+    return ref.watch(movieFlowControllerProvider).movie.when(
+          data: (movie) {
+            return Scaffold(
+              appBar: AppBar(),
+              body: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            CoverImage(movie: movie),
+                            Positioned(
+                              width: MediaQuery.of(context).size.width,
+                              bottom: -(movieHeight / 2),
+                              child: MovieImageDetails(
+                                  movie: movie, movieHeight: movieHeight),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: movieHeight / 2,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            movie.overview,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                )
-              ],
+                  PrimaryButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      text: 'Find another movie')
+                ],
+              ),
+            );
+          },
+          error: (e, s) {
+            return const Text('Sorry, \n Something went wrong on our end.');
+          },
+          loading: () => const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           ),
-          PrimaryButton(
-              onPressed: () => Navigator.of(context).pop(),
-              text: 'Find another movie')
-        ],
-      ),
-    );
+        );
   }
 }
 
 class CoverImage extends StatelessWidget {
-  const CoverImage({Key? key}) : super(key: key);
+  final Movie movie;
+  const CoverImage({Key? key, required this.movie}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Container(
       constraints: const BoxConstraints(minHeight: 300),
-      child: ShaderMask(shaderCallback: (rect) {
-        return LinearGradient(
-            begin: Alignment.center,
-            end: Alignment.bottomCenter,
-            colors: [
-              Theme.of(context).scaffoldBackgroundColor,
-              Colors.transparent
-            ]).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-      }),
+      child: ShaderMask(
+          shaderCallback: (rect) {
+            return LinearGradient(
+                begin: Alignment.center,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Theme.of(context).scaffoldBackgroundColor,
+                  Colors.transparent
+                ]).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+          },
+          blendMode: BlendMode.dstIn,
+          child: Image.network(
+            movie.backDropPath ?? '',
+            fit: BoxFit.cover,
+            errorBuilder: (context, e, s) {
+              return const Placeholder();
+            },
+          )),
     );
   }
 }
 
 class MovieImageDetails extends ConsumerWidget {
+  final Movie movie;
+  final double movieHeight;
+
   const MovieImageDetails(
       {Key? key, required this.movie, required this.movieHeight})
       : super(key: key);
-
-  final Movie movie;
-  final double movieHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -96,7 +117,13 @@ class MovieImageDetails extends ConsumerWidget {
           SizedBox(
             width: 100,
             height: movieHeight,
-            child: const Placeholder(),
+            child: Image.network(
+              movie.posterPath ?? '',
+              fit: BoxFit.cover,
+              errorBuilder: (context, e, s) {
+                return const Placeholder();
+              },
+            ),
           ),
           const SizedBox(
             height: kMediumSpacing,

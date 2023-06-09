@@ -2,20 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:movie_recommendation_app/core/constants.dart';
 
 class PrimaryButton extends StatelessWidget {
+  final VoidCallback onPressed;
+  final String text;
+  final double width;
+  final bool isLoading;
   const PrimaryButton({
     Key? key,
     required this.onPressed,
     required this.text,
     this.width = double.infinity,
+    this.isLoading = false,
   }) : super(key: key);
 
-  final VoidCallback onPressed;
-  final String text;
-  final double width;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 12.0),
+      padding: const EdgeInsets.symmetric(horizontal: 12.0),
       child: TextButton(
         style: TextButton.styleFrom(
           shape: RoundedRectangleBorder(
@@ -27,10 +29,15 @@ class PrimaryButton extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              text,
-              style: Theme.of(context).textTheme.labelLarge,
-            )
+            if (isLoading)
+              CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.onPrimary,
+              )
+            else
+              Text(
+                text,
+                style: Theme.of(context).textTheme.labelLarge,
+              )
           ],
         ),
       ),
