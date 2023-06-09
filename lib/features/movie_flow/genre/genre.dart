@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movie_recommendation_app/features/movie_flow/genre/genre_entity.dart';
 
 @immutable
 class Genre {
@@ -7,6 +8,9 @@ class Genre {
   final bool isSelected;
 
   const Genre({this.id = 0, required this.name, this.isSelected = false});
+  factory Genre.fromEntity(GenreEntity entity) {
+    return Genre(id: entity.id, name: entity.name, isSelected: false);
+  }
 
   Genre toggleSelected() {
     return Genre(

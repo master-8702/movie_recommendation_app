@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/features/movie_flow/movie_flow.dart';
@@ -6,7 +7,14 @@ import 'package:movie_recommendation_app/theme/custom_theme.dart';
 void main() {
   // here we are setting our provider scope , which is our main app
   runApp(const ProviderScope(child: MyApp()));
+
 }
+
+final dioProvider = Provider<Dio>((ref){
+  return Dio(BaseOptions(baseUrl: 'https://api.themoviedb.org/3/',));
+});
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import '../genre/genre.dart';
-
+import 'package:movie_recommendation_app/features/movie_flow/result/movie_entity.dart';
 import '../../../core/constants.dart';
 import '../../../core/widgets/primary_button.dart';
 
@@ -32,6 +32,10 @@ class Movie {
         releaseDate = '',
         backDropPath = '',
         posterPath = '';
+
+  factory Movie.fromEntity(MovieEntity movieEntity, List<Genre> genres){
+    return Movie(title: movieEntity.title, overview: movieEntity.overview, voteAverage: movieEntity.voteAverage, genres: genres.where((genre) => movieEntity.genreIds.contains(genre.id)).toList(growable: false), releaseDate: movieEntity.releaseDate, backDropPath: 'https://image.tmdb.org/t/p/original/${movieEntity.backdropPath}', posterPath: 'https://image.tmdb.org/t/p/original/${movieEntity.posterPath}');
+  }
 
   String get genresCommaSeparated =>
       genres.map((e) => e.name).toList().join(', ');
