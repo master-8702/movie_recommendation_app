@@ -32,8 +32,15 @@ class MovieFlowController extends StateNotifier<MovieFlowState> {
     state = state.copyWith(genres: const AsyncValue.loading());
 
     final result = await movieService.getGenres();
-
-    state = state.copyWith(genres: AsyncValue.data(result));
+    // here we are consuming the multiple result package to return different results
+    // based on the outcome, when success or when error
+    result.when((genres) {
+      final updatedGenre = AsyncValue.data(genres);
+      state = state.copyWith(genres: updatedGenre);
+    }, (error) {
+      state =
+          state.copyWith(genres: AsyncValue.error(error, StackTrace.current));
+    });
   }
 
   Future<void> getRecommendedMovie() async {
@@ -46,7 +53,12 @@ class MovieFlowController extends StateNotifier<MovieFlowState> {
     final result = await movieService.getRecommendedMovie(
         state.rating, state.yearsBack, selectedGenres);
 
-    state = state.copyWith(movie: AsyncValue.data(result));
+    result.when((movie) {
+      state = state.copyWith(movie: AsyncValue.data(movie));
+    }, (error) {
+      state =
+          state.copyWith(movie: AsyncValue.error(error, StackTrace.current));
+    });
   }
 
   void toggleSelected(Genre genre) {
@@ -58,11 +70,12 @@ class MovieFlowController extends StateNotifier<MovieFlowState> {
   }
 
   void updateRating(int updatedRating) {
-    state = state.copyWith(rating: updatedRating);
+    state = state.copyWith(rating: updatedRating < 0 ? 0 : updatedRating);
   }
 
   void updateYearsBack(int updatedYearsBack) {
-    state = state.copyWith(yearsBack: updatedYearsBack);
+    state =
+        state.copyWith(yearsBack: updatedYearsBack < 0 ? 0 : updatedYearsBack);
   }
 
   void nextPage() {
