@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:movie_recommendation_app/core/failure.dart';
 import 'package:movie_recommendation_app/core/widgets/failure_screen.dart';
+import 'package:movie_recommendation_app/core/widgets/network_fading_image.dart';
 import 'package:movie_recommendation_app/features/movie_flow/movie_flow_controller.dart';
 import 'package:movie_recommendation_app/features/movie_flow/result/movie.dart';
 
@@ -84,23 +85,18 @@ class CoverImage extends StatelessWidget {
     return Container(
       constraints: const BoxConstraints(minHeight: 300),
       child: ShaderMask(
-          shaderCallback: (rect) {
-            return LinearGradient(
-                begin: Alignment.center,
-                end: Alignment.bottomCenter,
-                colors: [
-                  Theme.of(context).scaffoldBackgroundColor,
-                  Colors.transparent
-                ]).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
-          },
-          blendMode: BlendMode.dstIn,
-          child: Image.network(
-            movie.backDropPath ?? '',
-            fit: BoxFit.cover,
-            errorBuilder: (context, e, s) {
-              return const Placeholder();
-            },
-          )),
+        shaderCallback: (rect) {
+          return LinearGradient(
+              begin: Alignment.center,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).scaffoldBackgroundColor,
+                Colors.transparent
+              ]).createShader(Rect.fromLTRB(0, 0, rect.width, rect.height));
+        },
+        blendMode: BlendMode.dstIn,
+        child: NetworkFadingImage(path: movie.backDropPath ?? ''),
+      ),
     );
   }
 }
@@ -123,13 +119,7 @@ class MovieImageDetails extends ConsumerWidget {
           SizedBox(
             width: 100,
             height: movieHeight,
-            child: Image.network(
-              movie.posterPath ?? '',
-              fit: BoxFit.cover,
-              errorBuilder: (context, e, s) {
-                return const Placeholder();
-              },
-            ),
+            child: NetworkFadingImage(path: movie.posterPath ?? ''),
           ),
           const SizedBox(
             height: kMediumSpacing,
